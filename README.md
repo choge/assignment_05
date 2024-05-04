@@ -1,4 +1,4 @@
-`XmlHTTPRequest` でのあれこれ
+`XmlHttpRequest` でのあれこれ
 ===========================
 
 実行方法
