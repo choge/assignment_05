@@ -5,23 +5,26 @@ const titleArea = document.getElementById("title");
 const contentArea = document.getElementById("content");
 const button = document.getElementById("btn");
 function getData() {
-  console.log("getDataはじめました～♪");
-  // ajax.jsonからデータを取得する処理を記述
-  const request = new XMLHttpRequest();
-  request.onreadystatechange = function () {
-    if (request.readyState == 4) {
-      if (request.status == 200) {
-        console.log("レスポンス届きました～");
-        // console.log(typeof request.response);
-        // console.log(request.response[0]);
-        videodata = request.response;
-        console.log(videodata);
+  return new Promise((resolve, reject) => {
+    console.log("getDataはじめました～♪");
+    // ajax.jsonからデータを取得する処理を記述
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+      if (request.readyState == 4) {
+        if (request.status == 200) {
+          console.log("レスポンス届きました～");
+          // videodata = request.response;
+          console.log(videodata);
+          resolve(request.response);
+        } else {
+          reject(new Error(request.statusText));
+        }
       }
-    }
-  };
-  request.open("GET", "ajax.json");
-  request.responseType = "json";
-  request.send(null);
+    };
+    request.open("GET", "ajax.json");
+    request.responseType = "json";
+    request.send(null);
+  });
 }
 
 function registerClickEvent() {
@@ -39,9 +42,12 @@ function changeVideo() {
     videoArea.setAttribute("src", videodata[number].url);
     number == 2 ? (number = 0) : number++;
   } else {
-    getData();
-    changeVideo();
+    getData().then((response) => {
+      videodata = response;
+      changeVideo();
+    }).catch((response) => {
+      console.log('failed with ', response);
+    });
   }
 }
 window.onload = registerClickEvent();
-//window.onload = getData();
